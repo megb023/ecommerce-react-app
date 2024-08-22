@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { fetchProducts } from '../services/api';
 import ProductCard from '../components/ProductCard';
+import { Grid, Card, Image } from 'semantic-ui-react';
+
 
 function Home() {
     const [products, setProducts] = useState([]);
@@ -15,11 +17,21 @@ function Home() {
     return (
       <div className="home-page">
         <h1>Product Listings</h1>
-        <div className="product-list">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
+        <Grid columns={4} divided>
+            {products.map((product) => (
+            <Grid.Column key={product.id}>
+                <Card>
+                    <Image src={product.image} wrapped ui={false} />
+                    <Card.Content>
+                        <Card.Header>{product.title}</Card.Header>
+                        <Card.Meta>
+                            <span className='date'>${product.price}</span>
+                        </Card.Meta>
+                    </Card.Content>
+                </Card>
+            </Grid.Column>
           ))}
-        </div>
+        </Grid>
       </div>
     );
 }

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchProductById } from '../services/api';
+import '../App.css';
 
 function ProductDetail() {
   const { id } = useParams();
