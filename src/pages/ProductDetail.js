@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchProductById } from '../services/api';
-import '../App.css';
 
 function ProductDetail() {
   const { id } = useParams();
@@ -17,7 +16,7 @@ function ProductDetail() {
 
   return (
     <div className="product-detail">
-      <img src={product.imageUrl} alt={product.name} />
+      <img src={product.image} alt={product.name} />
       <h1>{product.name}</h1>
       <p>{product.description}</p>
       <p>${product.price}</p>

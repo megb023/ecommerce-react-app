@@ -1,6 +1,8 @@
 .App {
   text-align: center;
+  
 }
+
 
 .App-logo {
   height: 40vmin;
@@ -11,6 +13,32 @@
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
+
 }
 
+.product-card {
+  height: 100%; /* Ensure the card takes full height of the column */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Space out image and content */
+}
+
+.product-image {
+  width: 30%; /* Ensure the image takes full width of its container */
+  height: 150px; /* Set a fixed height to control image size */
+  object-fit: contain; /* Scale the image to cover the container */
+}
+
+.product-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+body {
+  background-color: rgb(140, 165, 168);
+  padding-top: 50px;
+}
 

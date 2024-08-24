@@ -1,4 +1,3 @@
-// src/pages/Checkout.js
 import React, { useState } from 'react';
 
 function Checkout() {

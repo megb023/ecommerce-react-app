@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { fetchProducts } from '../services/api';
 import ProductCard from '../components/ProductCard';
 import { Grid, Card, Image } from 'semantic-ui-react';
-
+import '../App.css';
 
 function Home() {
     const [products, setProducts] = useState([]);
@@ -15,20 +15,14 @@ function Home() {
     }, []);
   
     return (
-      <div className="home-page">
-        <h1>Product Listings</h1>
-        <Grid columns={4} divided>
+      <div>
+        <Grid centered container columns={4}>
+          <Grid.Row textAlign="center">
+            <h1>E-Commerce Store</h1>
+          </Grid.Row>
             {products.map((product) => (
             <Grid.Column key={product.id}>
-                <Card>
-                    <Image src={product.image} wrapped ui={false} />
-                    <Card.Content>
-                        <Card.Header>{product.title}</Card.Header>
-                        <Card.Meta>
-                            <span className='date'>${product.price}</span>
-                        </Card.Meta>
-                    </Card.Content>
-                </Card>
+                <ProductCard product={product} />
             </Grid.Column>
           ))}
         </Grid>

@@ -1,15 +1,19 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Grid, Card, Image } from 'semantic-ui-react';
+
+
 
 function ProductCard({ product }) {
     return (
-        <div className="product-card">
-            <img src={product.image} alt={product.name} />
-            <h2>{product.name}</h2>
-            <p>${product.price}</p>
-            <Link to={`/product/${product.id}`}>View Details</Link>
-            <button>Add to Cart</button>
-        </div>
+        <Card className="product-card">
+            <Image src={product.image} className="product-image" wrapped ui={false} />
+            <Card.Content className="product-content">
+                <Card.Header>{product.title}</Card.Header>
+                <Card.Meta>
+                    <span className='date'>${product.price}</span>
+                </Card.Meta>
+            </Card.Content>
+        </Card>
 
     );
 }

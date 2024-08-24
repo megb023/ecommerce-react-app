@@ -1,19 +1,26 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Menu, Input, Icon } from 'semantic-ui-react';
+
 
 function Header() {
-    return(
-        <header>
-            <nav>
-                <Link to ="/">Home</Link>
-                <Link to="/cart">Cart</Link>
-            </nav>
-            <input type="text" placeholder="Search products..."/>
-            <Link to="/cart">
-                <span>Cart (0)</span>
-            </Link>
-        </header>
+    return (
+      <Menu fixed="top" inverted>
+        <Menu.Item header as={Link} to="/">
+          <Icon name="home" />
+          Home
+        </Menu.Item>
+  
+        <Menu.Item position="left">
+          <Input icon="search" placeholder="Search..." />
+        </Menu.Item>
+  
+        <Menu.Item position="right" as={Link} to="/cart">
+          <Icon name="shopping cart"/>
+          Cart
+        </Menu.Item>
+      </Menu>
     );
-}
-
-export default Header;
+  }
+  
+  export default Header;
