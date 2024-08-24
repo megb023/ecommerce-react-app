@@ -6,6 +6,7 @@ import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import Header from './components/Header';
 
+
 function App() {
   return (
     <Router>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, Input, Icon } from 'semantic-ui-react';
-
+import '../App.css';
 
 function Header() {
     return (

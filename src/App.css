@@ -38,7 +38,21 @@
 }
 
 body {
-  background-color: rgb(140, 165, 168);
+  background-color: rgb(218, 227, 229);
   padding-top: 50px;
 }
 
+.price {
+  display: block;
+  font-size: 1.5em;
+  font-weight: bold;
+  text-align: center;
+}
+
+.hover-effect {
+  transition: transform 0.3s ease-in-out;
+}
+
+.hover-effect:hover {
+  transform: translateY(-10px);
+}
