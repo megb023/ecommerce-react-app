@@ -75,11 +75,11 @@ function Cart() {
                 <Table.HeaderCell>Actions</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
-            <Table.Body>
+            <Table.Body data-test="items-table">
               {cart.map((item) => (
                 <Table.Row key={item.id}>
                   <Table.Cell>{item.name}</Table.Cell>
-                  <Table.Cell>${item.price.toFixed(2)}</Table.Cell>
+                  <Table.Cell data-test="item-price">${item.price.toFixed(2)}</Table.Cell>
                   <Table.Cell>
                     <Input 
                       type="number" 
@@ -88,7 +88,7 @@ function Cart() {
                       min="1"
                     />
                   </Table.Cell>
-                  <Table.Cell>${(item.price * item.quantity).toFixed(2)}</Table.Cell>
+                  <Table.Cell data-test="item-totals">${(item.price * item.quantity).toFixed(2)}</Table.Cell>
                   <Table.Cell>
                     <Button icon color="red" onClick={() => handleRemoveItem(item.id)}>
                       <Icon name="trash" />
@@ -101,11 +101,11 @@ function Cart() {
           <Segment>
             <Grid columns={2} stackable textAlign='center'>
               <Grid.Row verticalAlign='middle'>
-                <Grid.Column>
+                <Grid.Column data-test="total-price">
                   <h2>Total: ${totalPrice.toFixed(2)}</h2>
                 </Grid.Column>
                 <Grid.Column>
-                  <Button color="green" size="large" onClick={handleCheckout}>
+                  <Button data-test="checkout-button" color="green" size="large" onClick={handleCheckout}>
                     Proceed to Checkout
                   </Button>
                 </Grid.Column>

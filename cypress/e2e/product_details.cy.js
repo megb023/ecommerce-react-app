@@ -61,9 +61,7 @@ describe('Product detail', () => {
     cy.get('[data-test="addToCart"]').should('be.visible').should('have.text', 'Add to Cart (1)');
 
     //check that increasing the quantity updates the add to cart button as well as the text box
-    cy.get('[data-test="plusButton"]').click();
-    cy.get('[data-test="plusButton"]').click();
-    cy.get('[data-test="plusButton"]').click();
+    cy.get('[data-test="plusButton"]').click().click().click();
     cy.get('[data-test="quantity"]').children().should('be.visible').should('have.value', '4');
     cy.get('[data-test="addToCart"]').should('be.visible').should('have.text', 'Add to Cart (4)');
 
