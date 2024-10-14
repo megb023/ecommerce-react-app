@@ -1,0 +1,581 @@
+{
+	"info": {
+		"_postman_id": "0dfa4a4e-3882-4017-9ce6-97ff44e99106",
+		"name": "eCommerce Store",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34051073"
+	},
+	"item": [
+		{
+			"name": "Get all products",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"products\", JSON.stringify(jsonData));",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://fakestoreapi.com/products",
+					"protocol": "https",
+					"host": [
+						"fakestoreapi",
+						"com"
+					],
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add random item to cart",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Get the stored products",
+							"var products = JSON.parse(pm.environment.get(\"products\"));",
+							"",
+							"// Select a random product",
+							"var randomProduct = products[Math.floor(Math.random() * products.length)];",
+							"",
+							"// Set the selected product as environment variables",
+							"pm.environment.set(\"currentProductId\", randomProduct.id);",
+							"pm.environment.set(\"currentProductName\", randomProduct.title);",
+							"pm.environment.set(\"currentProductPrice\", randomProduct.price);",
+							"",
+							"// Generate a random quantity (1-5)",
+							"var quantity = Math.floor(Math.random() * 5) + 1;",
+							"pm.environment.set(\"currentQuantity\", quantity);",
+							"",
+							"console.log(\"Adding product \" + randomProduct.title + \" with quantity \" + quantity);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Response is an array\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.be.an('array');",
+							"});",
+							"",
+							"pm.test(\"Added item is in the cart\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    var currentProductId = Number(pm.environment.get(\"currentProductId\"));",
+							"    var addedItem = jsonData.find(item => item.product_id === currentProductId);",
+							"    ",
+							"    pm.expect(addedItem, \"Added item should exist in the cart\").to.not.be.undefined;",
+							"    pm.expect(addedItem.name).to.eql(pm.environment.get(\"currentProductName\"));",
+							"    pm.expect(addedItem.price).to.eql(Number(pm.environment.get(\"currentProductPrice\")));",
+							"    ",
+							"    var addedQuantity = Number(pm.environment.get(\"currentQuantity\"));",
+							"    pm.expect(addedItem.quantity).to.be.at.least(addedQuantity);",
+							"",
+							"    // Store the current quantity for the next request",
+							"    pm.environment.set(\"previousQuantity\", addedItem.quantity);",
+							"",
+							"    console.log(\"Product added to cart:\");",
+							"    console.log(\"Product ID:\", currentProductId);",
+							"    console.log(\"Product Name:\", addedItem.name);",
+							"    console.log(\"Quantity added:\", addedQuantity);",
+							"    console.log(\"Current quantity in cart:\", addedItem.quantity);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": {{currentProductId}},\n    \"name\": \"{{currentProductName}}\",\n    \"price\": {{currentProductPrice}},\n    \"quantity\": {{currentQuantity}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/cart",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"cart"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add random item to cart again",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Get the product details from the previous request",
+							"var productId = pm.environment.get(\"currentProductId\");",
+							"var productName = pm.environment.get(\"currentProductName\");",
+							"var productPrice = pm.environment.get(\"currentProductPrice\");",
+							"",
+							"// Set the quantity to add (we want to add 1)",
+							"var quantityToAdd = 1;",
+							"",
+							"// Set the environment variables for this request",
+							"pm.environment.set(\"currentProductId\", productId);",
+							"pm.environment.set(\"currentProductName\", productName);",
+							"pm.environment.set(\"currentProductPrice\", productPrice);",
+							"pm.environment.set(\"currentQuantity\", quantityToAdd);",
+							"",
+							"console.log(\"Preparing to add same product again:\");",
+							"console.log(\"Product ID:\", productId);",
+							"console.log(\"Product Name:\", productName);",
+							"console.log(\"Quantity to add:\", quantityToAdd);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Response is an array\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.be.an('array');",
+							"});",
+							"",
+							"pm.test(\"Item quantity in cart has increased by 1\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    var currentProductId = Number(pm.environment.get(\"currentProductId\"));",
+							"    var addedItem = jsonData.find(item => item.product_id === currentProductId);",
+							"    ",
+							"    pm.expect(addedItem, \"Added item should exist in the cart\").to.not.be.undefined;",
+							"    pm.expect(addedItem.name).to.eql(pm.environment.get(\"currentProductName\"));",
+							"    pm.expect(addedItem.price).to.eql(Number(pm.environment.get(\"currentProductPrice\")));",
+							"    ",
+							"    var previousQuantity = Number(pm.environment.get(\"previousQuantity\"));",
+							"    var newQuantity = addedItem.quantity;",
+							"",
+							"    console.log(\"Adding same product again:\");",
+							"    console.log(\"Product ID:\", currentProductId);",
+							"    console.log(\"Product Name:\", addedItem.name);",
+							"    console.log(\"Previous quantity:\", previousQuantity);",
+							"    console.log(\"New quantity in cart:\", newQuantity);",
+							"",
+							"    pm.expect(newQuantity, \"New quantity should be previous quantity plus 1\").to.eql(previousQuantity + 1);",
+							"",
+							"    // Update the previousQuantity for potential future requests",
+							"    pm.environment.set(\"previousQuantity\", newQuantity);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": {{currentProductId}},\n    \"name\": \"{{currentProductName}}\",\n    \"price\": {{currentProductPrice}},\n    \"quantity\": {{currentQuantity}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/cart",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"cart"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all cart items",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/cart",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"cart"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update existing item",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Item updated successfully\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.quantity).to.eql(quantity);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const newItemId = 1; ",
+							"",
+							"pm.environment.set(\"itemId\", newItemId);",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"quantity\": -4\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/cart/{{itemId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"cart",
+						"{{itemId}}"
+					],
+					"query": [
+						{
+							"key": "itemId",
+							"value": "1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update with qty less than 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Invalid Data\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const newItemId = 5; ",
+							"",
+							"pm.environment.set(\"itemId\", newItemId);",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"quantity\": -4\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/cart/{{itemId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"cart",
+						"{{itemId}}"
+					],
+					"query": [
+						{
+							"key": "itemId",
+							"value": "1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete an existing item",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							"",
+							"// Store the deleted item ID for the next request",
+							"pm.environment.set(\"deletedItemId\", pm.variables.get(\"itemId\"));",
+							"",
+							"// Send a GET request to verify the item is gone",
+							"pm.sendRequest({",
+							"    url: pm.variables.get(\"baseUrl\") + \"/cart/\" + pm.variables.get(\"itemId\"),",
+							"    method: 'GET',",
+							"}, function (err, response) {",
+							"    pm.test(\"Deleted item is no longer in the cart\", function () {",
+							"        pm.expect(response.code).to.equal(404);",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const newItemId = 1; ",
+							"",
+							"pm.environment.set(\"itemId\", newItemId);",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/cart/{{itemId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"cart",
+						"{{itemId}}"
+					],
+					"query": [
+						{
+							"key": "itemId",
+							"value": "1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete an item that doesn't exist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const newItemId = 1; ",
+							"",
+							"pm.environment.set(\"itemId\", newItemId);",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/cart/{{itemId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"cart",
+						"{{itemId}}"
+					],
+					"query": [
+						{
+							"key": "itemId",
+							"value": "1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Clear cart",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/cart",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"cart"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://127.0.0.1:5000",
+			"type": "string"
+		},
+		{
+			"key": "itemId",
+			"value": "1",
+			"type": "string"
+		}
+	]
+}
