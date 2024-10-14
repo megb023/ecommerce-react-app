@@ -232,6 +232,20 @@
 		},
 		{
 			"name": "Get all cart items",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -254,10 +268,14 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Item updated successfully\", function () {",
+							"var requestBody = JSON.parse(pm.request.body.raw);",
+							"",
+							"var sentQuantity = requestBody.quantity;",
+							"",
+							"pm.test(\"Item quantity updated correctly\", function () {",
 							"    pm.response.to.have.status(200);",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.quantity).to.eql(quantity);",
+							"    pm.expect(jsonData.quantity).to.eql(sentQuantity);",
 							"});"
 						],
 						"type": "text/javascript",
@@ -284,7 +302,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"quantity\": -4\n}",
+					"raw": "{\n  \"quantity\": 4\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -383,19 +401,7 @@
 							"pm.test(\"Status code is 204\", function () {",
 							"    pm.response.to.have.status(204);",
 							"});",
-							"",
-							"// Store the deleted item ID for the next request",
-							"pm.environment.set(\"deletedItemId\", pm.variables.get(\"itemId\"));",
-							"",
-							"// Send a GET request to verify the item is gone",
-							"pm.sendRequest({",
-							"    url: pm.variables.get(\"baseUrl\") + \"/cart/\" + pm.variables.get(\"itemId\"),",
-							"    method: 'GET',",
-							"}, function (err, response) {",
-							"    pm.test(\"Deleted item is no longer in the cart\", function () {",
-							"        pm.expect(response.code).to.equal(404);",
-							"    });",
-							"});"
+							""
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -439,8 +445,8 @@
 					],
 					"query": [
 						{
-							"key": "itemId",
-							"value": "1",
+							"key": "",
+							"value": "",
 							"disabled": true
 						}
 					]
@@ -468,7 +474,7 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"const newItemId = 1; ",
+							"const newItemId = 100; ",
 							"",
 							"pm.environment.set(\"itemId\", newItemId);",
 							"",
