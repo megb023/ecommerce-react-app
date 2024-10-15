@@ -25,7 +25,10 @@ jobs:
       run: npm test -- --watchAll=false
     
     - name: Run Cypress tests
-      run: npm run cypress:run
+      run: npm run test:e2e
+
+    - name: Install Newman
+      run: npm install -g newman
     
     - name: Run API tests
       run: newman run api-tests/StoreCartTest.json

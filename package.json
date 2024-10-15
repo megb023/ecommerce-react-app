@@ -18,12 +18,11 @@
     "styled-components": "^6.1.12",
     "web-vitals": "^2.1.4"
   },
-
   "devDependencies": {
-  "cypress": "^13.6.0",
-  "@babel/plugin-proposal-private-property-in-object": "^7.16.7"
+    "@babel/plugin-proposal-private-property-in-object": "^7.16.7",
+    "cypress": "^13.6.0",
+    "start-server-and-test": "^2.0.8"
   },
-  
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
