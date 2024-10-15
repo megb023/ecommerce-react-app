@@ -28,7 +28,7 @@ jobs:
       run: npm run cypress:run
     
     - name: Run API tests
-      run: echo "Add your API test command here"
+      run: newman run api-tests/StoreCartTest.json
 
   deploy:
     needs: test

@@ -20,15 +20,22 @@
   },
 
   "devDependencies": {
-  "cypress": "^13.6.0"
+  "cypress": "^13.6.0",
+  "@babel/plugin-proposal-private-property-in-object": "^7.16.7"
   },
   
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --transformIgnorePatterns \"node_modules/(?!axios)/\"",
     "eject": "react-scripts eject",
-    "cypress:run": "cypress run"
+    "cypress:run": "cypress run",
+    "test:api": "newman run api-tests/StoreCartTest.json"
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!axios)/"
+    ]
   },
   "eslintConfig": {
     "extends": [

@@ -2,7 +2,6 @@ describe('Cart', () => {
   beforeEach(() => {
     cy.visit('/')
 
-    
   })
 
   it('Empty cart shows correct page', () => {
@@ -10,8 +9,6 @@ describe('Cart', () => {
 
     cy.get('body').then($body => {
       if ($body.find('table.ui.celled.table').length > 0) {
-
-        // Table exists, proceed with removal
 
         // Count the initial number of rows
         cy.get('table.ui.celled.table tbody tr').its('length').then((initialRowCount) => {
