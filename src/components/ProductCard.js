@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Card, Image, CardDescription, CardMeta } from 'semantic-ui-react';
+import {  Card, Image, CardDescription, CardMeta } from 'semantic-ui-react';
 import '../App.css';
 
 

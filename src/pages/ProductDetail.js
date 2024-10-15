@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchProductById, addToCart } from '../services/api';
+import { fetchProductById } from '../services/api';
 import { 
   Container, 
   Grid, 
   Image, 
   Header, 
   Segment, 
-  Button, 
   Loader, 
   Divider,
   Label,
