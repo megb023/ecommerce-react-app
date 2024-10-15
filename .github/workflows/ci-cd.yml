@@ -33,14 +33,21 @@ jobs:
     - name: Run React tests
       run: npm test -- --watchAll=false
     
-    - name: Run Cypress tests
-      run: npm run test:e2e
+    - name: Cypress run
+      uses: cypress-io/github-action@v5
+      with:
+        build: npm run build
+        start: npm start
+        wait-on: 'http://localhost:3000'
+        config-file: cypress.config.js
+      env:
+        CI: true
 
     - name: Install Newman
       run: npm install -g newman
     
     - name: Run API tests
-      run: newman run api-tests/StoreCartTest.json
+      run: npx newman run api-tests/StoreCartTest.json
 
   deploy:
     needs: test
