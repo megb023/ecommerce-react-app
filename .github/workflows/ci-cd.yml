@@ -25,6 +25,8 @@ jobs:
     
     - name: Install dependencies
       run: |
+        sudo apt-get update
+        sudo apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
         cd ecommerce-frontend
         npm ci || npm install
         if [ $? -ne 0 ]; then
@@ -42,7 +44,9 @@ jobs:
         pip install -r requirements.txt  # Assuming you have a requirements.txt file
     
     - name: Run React tests
-      run: npm test -- --watchAll=false
+      run: |
+        cd ecommerce-frontend  # Adjust this path to match your project structure
+        npm test -- --watchAll=false
 
     - name: Start backend server
       run: |
@@ -57,9 +61,10 @@ jobs:
         working-directory: ecommerce-frontend
         build: npm run build
         start: npm start
-        wait-on: 'http://localhost:3000,http://localhost:5000'
-        config-file: cypress.config.js
+        wait-on: 'http://localhost:3000'
+        command: xvfb-run --auto-servernum npx cypress run
       env:
+        CYPRESS_BASE_URL: http://localhost:3000
         CI: true
 
     - name: Upload Cypress screenshots
@@ -67,14 +72,14 @@ jobs:
       if: failure()
       with:
         name: cypress-screenshots
-        path: ecommerce-react-app/cypress/screenshots
+        path: cypress/screenshots
 
     - name: Upload Cypress videos
       uses: actions/upload-artifact@v3
       if: always()
       with:
         name: cypress-videos
-        path: ecommerce-react-app/cypress/videos
+        path: cypress/videos
 
     - name: Install Newman
       run: npm install -g newman

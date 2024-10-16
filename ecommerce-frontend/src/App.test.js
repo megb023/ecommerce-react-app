@@ -1,8 +1,21 @@
+import React from 'react';
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+test('renders E-Commerce Store header', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  const headerElement = screen.getByText(/E-Commerce Store/i);
+  expect(headerElement).toBeInTheDocument();
+});
+
+test('renders Home button', () => {
+  render(<App />);
+  const homeButton = screen.getByText(/Home/i);
+  expect(homeButton).toBeInTheDocument();
+});
+
+test('renders Cart button', () => {
+  render(<App />);
+  const cartButton = screen.getByText(/Cart/i);
+  expect(cartButton).toBeInTheDocument();
 });
