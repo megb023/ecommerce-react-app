@@ -6,8 +6,7 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
-    // Add these configurations
-    video: false, // Disable video recording to speed up tests in CI
+    video: true, // Disable video recording to speed up tests in CI
     screenshotOnRunFailure: true, // Enable screenshots on test failure
     defaultCommandTimeout: 10000, // Increase timeout for commands
     pageLoadTimeout: 30000, // Increase page load timeout

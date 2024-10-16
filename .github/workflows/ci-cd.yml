@@ -17,9 +17,15 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: '18.x'
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11' 
     
     - name: Install dependencies
       run: |
+        cd ecommerce-frontend
         npm ci || npm install
         if [ $? -ne 0 ]; then
           npm install
@@ -29,19 +35,46 @@ jobs:
           git commit -m "Update package-lock.json" || echo "No changes to commit"
           git push
         fi
+
+    - name: Install backend dependencies
+      run: |
+        cd ecommerce-backend
+        pip install -r requirements.txt  # Assuming you have a requirements.txt file
     
     - name: Run React tests
       run: npm test -- --watchAll=false
+
+    - name: Start backend server
+      run: |
+        cd ecommerce-backend
+        python app.py &  # Adjust this to your Python script that starts the server
+      env:
+        CI: true
     
     - name: Cypress run
       uses: cypress-io/github-action@v5
       with:
+        working-directory: ecommerce-frontend
         build: npm run build
         start: npm start
-        wait-on: 'http://localhost:3000'
+        wait-on: 'http://localhost:3000,http://localhost:5000'  # Adjust backend port if different
         config-file: cypress.config.js
       env:
         CI: true
+
+    - name: Upload Cypress screenshots
+      uses: actions/upload-artifact@v2
+      if: failure()
+      with:
+        name: cypress-screenshots
+        path: ecommerce-react-app/cypress/screenshots
+
+    - name: Upload Cypress videos
+      uses: actions/upload-artifact@v2
+      if: always()
+      with:
+        name: cypress-videos
+        path: ecommerce-react-app/cypress/videos
 
     - name: Install Newman
       run: npm install -g newman
