@@ -11,15 +11,15 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     
     - name: Use Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: '18.x'
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: '3.11' 
     
@@ -52,25 +52,25 @@ jobs:
         CI: true
     
     - name: Cypress run
-      uses: cypress-io/github-action@v5
+      uses: cypress-io/github-action@v6
       with:
         working-directory: ecommerce-frontend
         build: npm run build
         start: npm start
-        wait-on: 'http://localhost:3000,http://localhost:5000'  # Adjust backend port if different
+        wait-on: 'http://localhost:3000,http://localhost:5000'
         config-file: cypress.config.js
       env:
         CI: true
 
     - name: Upload Cypress screenshots
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       if: failure()
       with:
         name: cypress-screenshots
         path: ecommerce-react-app/cypress/screenshots
 
     - name: Upload Cypress videos
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       if: always()
       with:
         name: cypress-videos
@@ -88,7 +88,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     
     - name: Deploy to production
       run: |
