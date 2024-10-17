@@ -41,11 +41,19 @@ def manage_cart():
     
     elif request.method == 'POST':
         item = request.json
+        quantity = int(item.get('quantity', 1))  # Get quantity from request, default to 1 if not provided
+        if quantity < 1:
+            return jsonify({"error": "Quantity must be 1 or greater"}), 400
         existing_item = CartItem.query.filter_by(product_id=item['id']).first()
         if existing_item:
-            existing_item.quantity += 1
+            existing_item.quantity += quantity  # Add the new quantity to the existing quantity
         else:
-            new_item = CartItem(product_id=item['id'], name=item['name'], price=item['price'])
+            new_item = CartItem(
+                product_id=item['id'], 
+                name=item['name'], 
+                price=item['price'], 
+                quantity=quantity  # Use the quantity from the request
+            )
             db.session.add(new_item)
         db.session.commit()
         return jsonify([item.to_dict() for item in CartItem.query.all()]), 201
@@ -55,16 +63,26 @@ def manage_cart():
         db.session.commit()
         return '', 204
 
-@app.route('/cart/<int:product_id>', methods=['DELETE', 'OPTIONS'])
-def remove_from_cart(product_id):
+@app.route('/cart/<int:item_id>', methods=['PUT', 'DELETE', 'OPTIONS'])
+def manage_cart_item(item_id):
     if request.method == 'OPTIONS':
         return '', 200
-    item = CartItem.query.filter_by(product_id=product_id).first()
-    if item:
+    
+    item = CartItem.query.get_or_404(item_id)
+    
+    if request.method == 'PUT':
+        data = request.json
+        new_quantity = int(data.get('quantity', item.quantity))
+        if new_quantity < 1:
+            return jsonify({"error": "Quantity must be 1 or greater"}), 400
+        item.quantity = new_quantity
+        db.session.commit()
+        return jsonify(item.to_dict()), 200
+    
+    elif request.method == 'DELETE':
         db.session.delete(item)
         db.session.commit()
         return '', 204
-    return jsonify({'error': 'Product not found in cart'}), 404
 
 @app.after_request
 def after_request(response):

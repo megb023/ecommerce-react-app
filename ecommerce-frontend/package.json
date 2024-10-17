@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
+    "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.4",
     "react": "^18.3.1",
@@ -18,34 +18,18 @@
     "styled-components": "^6.1.12",
     "web-vitals": "^2.1.4"
   },
-
   "devDependencies": {
-  "cypress": "^13.6.0",
-  "@babel/plugin-proposal-private-property-in-object": "^7.16.7",
-  "start-server-and-test": "^1.14.0",
-  "@babel/core": "^7.22.5",
-  "@babel/preset-env": "^7.22.5",
-  "@babel/preset-react": "^7.22.5",
-  "babel-jest": "^29.5.0"
+    "@babel/plugin-proposal-private-property-in-object": "^7.16.7",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-react": "^7.16.7",
+    "babel-jest": "^27.5.1"
   },
-  
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom --transformIgnorePatterns \"node_modules/(?!axios)/\"",
+    "test": "react-scripts test --transformIgnorePatterns \"node_modules/(?!axios)/\" --env=jsdom",
     "eject": "react-scripts eject",
-    "cypress:open": "cypress open",
-    "cypress:run": "cypress run",
-    "test:api": "newman run api-tests/StoreCartTest.json",
-    "test:e2e": "start-server-and-test start http://localhost:3000 cypress:run"
-  },
-  "jest": {
-    "transformIgnorePatterns": [
-      "node_modules/(?!(axios)/)"
-    ],
-    "transform": {
-      "^.+\\.(js|jsx)$": "babel-jest"
-    }
+    "cypress:run": "cypress run"
   },
   "eslintConfig": {
     "extends": [
@@ -63,6 +47,14 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ]
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.(js|jsx)$": "babel-jest"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(axios)/)"
     ]
   }
 }

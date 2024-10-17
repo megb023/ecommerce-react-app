@@ -1,0 +1,110 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11' 
+    
+    - name: Install Dependencies
+      run: |
+        cd ecommerce-frontend
+        npm ci
+    - name: Build Frontend
+      run: |
+        cd ecommerce-frontend
+        npm run build
+    - name: Start Frontend Server
+      run: |
+        cd ecommerce-frontend
+        npm start &
+        sleep 60
+
+    - name: Install backend dependencies
+      run: |
+        cd ecommerce-backend
+        pip install -r requirements.txt  # Assuming you have a requirements.txt file
+    
+    - name: Run React tests
+      run: |
+        cd ecommerce-frontend  # Adjust this path to match your project structure
+        npm test -- --watchAll=false
+
+    - name: Start backend server
+      run: |
+        cd ecommerce-backend
+        python app.py &  # Adjust this to your Python script that starts the server
+      env:
+        CI: true
+
+    - name: List directory contents
+      run: |
+        pwd
+        ls -R
+
+    - name: Clear npm cache
+      run: npm cache clean --force
+    - name: Clear Cypress cache
+      run: npx cypress cache clear
+    
+    - name: Cypress run
+      uses: cypress-io/github-action@v6
+      with:
+        working-directory: .
+        build: npm run build
+        start: npm start
+        wait-on: 'http://localhost:3000'
+        command: npx cypress run
+      env:
+        CYPRESS_BASE_URL: http://localhost:3000
+        CI: true
+
+    - name: Upload Cypress screenshots
+      uses: actions/upload-artifact@v3
+      if: failure()
+      with:
+        name: cypress-screenshots
+        path: cypress/screenshots
+
+    - name: Upload Cypress videos
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: cypress-videos
+        path: cypress/videos
+
+    - name: Install Newman
+      run: npm install -g newman
+    
+    - name: Run API tests
+      run: npx newman run api-tests/StoreCartTest.json
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Deploy to production
+      run: |
+        # Add your deployment commands here
+        echo "Deploying to production"
