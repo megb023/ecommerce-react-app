@@ -25,7 +25,7 @@ describe('Cart', () => {
   
           for (let i = 0; i < initialRowCount; i++) {
             cy.get(`${tableSelector} tbody tr`)
-              .first()
+              .first() 
               .find('button.ui.red.icon.button')
               .click()
               .should('not.exist');
