@@ -34,6 +34,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom --transformIgnorePatterns \"node_modules/(?!axios)/\"",
     "eject": "react-scripts eject",
+    "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "test:api": "newman run api-tests/StoreCartTest.json",
     "test:e2e": "start-server-and-test start http://localhost:3000 cypress:run"
