@@ -42,6 +42,8 @@ def manage_cart():
     elif request.method == 'POST':
         item = request.json
         quantity = int(item.get('quantity', 1))  # Get quantity from request, default to 1 if not provided
+        if quantity < 1:
+            return jsonify({"error": "Quantity must be 1 or greater"}), 400
         existing_item = CartItem.query.filter_by(product_id=item['id']).first()
         if existing_item:
             existing_item.quantity += quantity  # Add the new quantity to the existing quantity
@@ -70,7 +72,10 @@ def manage_cart_item(item_id):
     
     if request.method == 'PUT':
         data = request.json
-        item.quantity = int(data.get('quantity', item.quantity))
+        new_quantity = int(data.get('quantity', item.quantity))
+        if new_quantity < 1:
+            return jsonify({"error": "Quantity must be 1 or greater"}), 400
+        item.quantity = new_quantity
         db.session.commit()
         return jsonify(item.to_dict()), 200
     

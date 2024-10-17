@@ -29,13 +29,37 @@ function Cart() {
 
   const handleQuantityChange = async (item, newQuantity) => {
     try {
-      await updateCartItem(item.id, newQuantity);
-      setCart(cart.map(cartItem => 
-        cartItem.id === item.id ? { ...cartItem, quantity: newQuantity } : cartItem
-      ));
+      if (newQuantity < 1) {
+        setError('Quantity must be 1 or greater.');
+        return;
+      }
+  
+      console.log(`Updating item ${item.id} to quantity ${newQuantity}`);
+      const response = await updateCartItem(item.id, newQuantity);
+      
+      console.log('Response status:', response.status);
+      console.log('Response ok:', response.ok);
+  
+      if (response.ok) {
+        const updatedItem = await response.json();
+        console.log('Updated item:', updatedItem);
+        setCart(cart.map(cartItem => 
+          cartItem.id === item.id ? updatedItem : cartItem
+        ));
+        setError(null); // Clear any previous errors
+      } else {
+        const errorText = await response.text();
+        console.log('Error response:', errorText);
+        try {
+          const errorData = JSON.parse(errorText);
+          setError(errorData.error || 'Failed to update quantity. Please try again.');
+        } catch (parseError) {
+          setError(`Failed to update quantity. Server response: ${errorText}`);
+        }
+      }
     } catch (err) {
-      setError('Failed to update quantity. Please try again.');
       console.error('Error updating quantity:', err);
+      setError(`Failed to update quantity. Error: ${err.message}`);
     }
   };
 

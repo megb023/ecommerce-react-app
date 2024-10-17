@@ -47,8 +47,22 @@ export const fetchCart = async () => {
     }
 };
 export const updateCartItem = async (itemId, newQuantity) => {
-    const response = await axios.put(`${BACKEND_URL}/cart/${itemId}, { quantity: newQuantity }`);
-    return response.data;
+    console.log(`Sending request to update item ${itemId} to quantity ${newQuantity}`);
+    try {
+      const response = await fetch(`http://127.0.0.1:5000/cart/${itemId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ quantity: newQuantity }),
+      });
+  
+      console.log('Response received:', response.status, response.statusText);
+      return response;
+    } catch (error) {
+      console.error('Fetch error:', error);
+      throw error;
+    }
   };
 
   export const removeFromCart = async (itemId) => {
