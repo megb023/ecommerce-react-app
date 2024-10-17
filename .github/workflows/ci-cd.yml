@@ -54,6 +54,11 @@ jobs:
         python app.py &  # Adjust this to your Python script that starts the server
       env:
         CI: true
+
+    - name: List directory contents
+      run: |
+        pwd
+        ls -R
     
     - name: Cypress run
       uses: cypress-io/github-action@v6
@@ -62,7 +67,7 @@ jobs:
         build: npm run build
         start: npm start
         wait-on: 'http://localhost:3000'
-        command: npx cypress run --config-file ../cypress.config.js
+        command: npx cypress run
       env:
         CYPRESS_BASE_URL: http://localhost:3000
         CI: true
