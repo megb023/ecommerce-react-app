@@ -348,7 +348,7 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"const newItemId = 5; ",
+							"const newItemId = 1; ",
 							"",
 							"pm.environment.set(\"itemId\", newItemId);",
 							"",
