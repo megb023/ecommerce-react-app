@@ -2,7 +2,7 @@ name: CI/CD
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, add-cypress-tests ]
   pull_request:
     branches: [ main ]
 
@@ -12,6 +12,11 @@ jobs:
     
     steps:
     - uses: actions/checkout@v3
+
+    - name: Checkout feature branch
+      run: |
+        git checkout ${{ github.head_ref || github.ref_name}}
+        git branch
     
     - name: Use Node.js
       uses: actions/setup-node@v3
@@ -59,6 +64,11 @@ jobs:
       run: |
         pwd
         ls -R
+
+    - name: Clear npm cache
+      run: npm cache clean --force
+    - name: Clear Cypress cache
+      run: npx cypress cache clear
     
     - name: Cypress run
       uses: cypress-io/github-action@v6
