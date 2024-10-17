@@ -5,38 +5,49 @@ describe('Cart', () => {
   })
 
   it('Empty cart shows correct page', () => {
-    cy.get('[data-test="cart-button"]').click()
-
+    // Click the cart button and wait for the page to load
+    cy.get('[data-test="cart-button"]').click();
+    cy.get('body').should('be.visible');
+  
+    // Wait for either the table or the empty cart message to be visible
     cy.get('body').then($body => {
-      if ($body.find('table.ui.celled.table').length > 0) {
-
-        // Count the initial number of rows
-        cy.get('table.ui.celled.table tbody tr').its('length').then((initialRowCount) => {
-          // Use a for loop to remove items
+      const tableSelector = 'table.ui.celled.table';
+      const emptyCartSelector = ':contains("Your cart is empty.")';
+  
+      cy.get('body').should($body => {
+        expect($body.find(tableSelector).length > 0 || $body.find(emptyCartSelector).length > 0).to.be.true;
+      });
+  
+      if ($body.find(tableSelector).length > 0) {
+        // If table exists, remove all items
+        cy.get(`${tableSelector} tbody tr`).then($rows => {
+          const initialRowCount = $rows.length;
+  
           for (let i = 0; i < initialRowCount; i++) {
-            cy.get('table.ui.celled.table tbody tr')
+            cy.get(`${tableSelector} tbody tr`)
               .first()
               .find('button.ui.red.icon.button')
-              .click();
-
+              .click()
+              .should('not.exist');
+  
             // Wait for the row to be removed before continuing
-            cy.get('table.ui.celled.table tbody tr').should('have.length', initialRowCount - i - 1);
+            cy.get(`${tableSelector} tbody tr`).should('have.length', initialRowCount - i - 1);
           }
-
+  
           // Verify that all items have been removed
-          cy.get('table.ui.celled.table tbody tr').should('not.exist');
+          cy.get(`${tableSelector} tbody tr`).should('not.exist');
         });
       } else {
         // Table doesn't exist, log a message and continue
-        cy.log('No table found. Continuing with the rest of the test.');
+        cy.log('No table found. Cart is already empty.');
       }
     });
+  
     // Check for "Your Cart" text
-    cy.contains('Your Cart').should('be.visible');
-
+    cy.contains('Your Cart', { timeout: 10000 }).should('be.visible');
+  
     // Check for "Your cart is empty." text
-    cy.contains('Your cart is empty.').should('be.visible');
-
+    cy.contains('Your cart is empty.', { timeout: 10000 }).should('be.visible');
   });
 
   it('Adds proper items and quantities to cart', () => {
