@@ -58,11 +58,11 @@ jobs:
     - name: Cypress run
       uses: cypress-io/github-action@v6
       with:
-        working-directory: ecommerce-frontend
+        working-directory: .
         build: npm run build
         start: npm start
         wait-on: 'http://localhost:3000'
-        command: xvfb-run --auto-servernum npx cypress run
+        command: npx cypress run --config-file ../cypress.config.js
       env:
         CYPRESS_BASE_URL: http://localhost:3000
         CI: true
