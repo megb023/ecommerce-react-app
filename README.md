@@ -1,70 +1,110 @@
-# Getting Started with Create React App
+# E-commerce Store Project Showcase
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project demonstrates a comprehensive set of QA engineering skills as well as full-stack development capabilities. It features a complete e-commerce application that I designed and implemented from the ground up, showcasing proficiency in:
 
-## Available Scripts
+1. Full-stack Development:
 
-In the project directory, you can run:
+- Backend development using Python and Flask
+- Frontend development using JavaScript and React
+- Database design and management with SQLAlchemy
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+2. Quality Assurance:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- API design and testing
+- End-to-end (E2E) testing
+- Implementation of CI/CD practices
 
-### `npm test`
+By building both the frontend and backend myself, this project illustrates not only my QA expertise but also a deep understanding of software development principles and practices. This combination of skills allows for more effective testing strategies and bug prevention, as I understand the entire application stack.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Tech Stack
 
-### `npm run build`
+- Backend: Python, Flask
+- Frontend: JavaScript, React
+- Database: SQLAlchemy
+- API Testing: Postman
+- E2E Testing: Cypress
+- CI/CD: GitHub Actions
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Installation and Setup
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Clone the repository
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```
+git clone https://github.com/megb023/ecommerce-react-app.git
+cd ecommerce-react-app
+```
+1. Set up the backend:
 
-### `npm run eject`
+```
+cd ecommerce-backend
+python -m venv venv
+source venv/bin/activate # On Windows use `venv\Scripts\activate`
+pip install -r requirements.txt
+flask db upgrade
+flask run
+```
+3. Set up the frontend:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```
+cd ecommerce-frontend
+npm install
+npm start
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Running Tests
+### API Tests (Postman)
+1. Import the Postman collection from api-tests/StoreCartTest.json
+2. Run the collection in Postman
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### E2E Tests (Cypress)
+1. Ensure the application is running locally
+2. Run Cypress tests:
+```
+cd ecommerce-frontend
+npm run cypress:open
+```
+## CI/CD Workflow
+This project uses GiHub Actions for CI/CD, automatically trigger on:
+- Push to main branch
+- Pull requests to main branch
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+The full workflow config can be found int .github/workflows/ci-cd.yml
 
-## Learn More
+## Key Testing Scenarios
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### E2E Tests (Cypress)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. Homepage test
+- Verification of homepage loading and header
+- Product grid display and content validation
+- Product info display (titles, prices)
+- Navigation functionality between pages
 
-### Code Splitting
+2. Product Detail Test
+- Product info consistency between listing and detail pages
+- Quantity selection functionality
+  - Increment/decrement buttons
+  - Minimum quantity validation (can't go below 0)
+  - Manual quantity input
+  - Add to Cart button quantity reflection and navigation validation
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+3. Cart Management Test
+- Empty cart state validation
+- Adding items with specific quantities
+- Price calculations
+  - Indiviudual item totals
+  - Cart total verification
+- Cart persistence across sesstions
+- Multiple items management
+  - Adding multiple items
+  - Updating quantities
+  - Removing individual items
+- Check button visibility and navigation
 
-### Analyzing the Bundle Size
+### API Testing (Postman/Newman)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Cart operations endpoint testing
+- Error handling validation
+- Response format verification
+- Status code validation
