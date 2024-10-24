@@ -57,6 +57,13 @@ npm start
 1. Import the Postman collection from api-tests/StoreCartTest.json
 2. Run the collection in Postman
 
+or
+
+```
+npm install -g newman
+newman run api-tests/StoreCartTest.json
+```
+
 ### E2E Tests (Cypress)
 1. Ensure the application is running locally
 2. Run Cypress tests:
@@ -108,3 +115,7 @@ The full workflow config can be found int .github/workflows/ci-cd.yml
 - Error handling validation
 - Response format verification
 - Status code validation
+
+### Test Demonstrations
+#### E2E Tests (Cypress)
+
