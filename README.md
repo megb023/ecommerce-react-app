@@ -117,5 +117,13 @@ The full workflow config can be found int .github/workflows/ci-cd.yml
 - Status code validation
 
 ### Test Demonstrations
-#### E2E Tests (Cypress)
+#### Product Detail Test Example - Cypress
+![Product Detail tests](demos/product_detail_tests.gif)
+
+#### Running Collection in Postman
+![Postman Tests](demos/postman_tests.gif)
+
+#### CI/CD Workflow (Click badge to see all runs)
+[![CI/CD](https://github.com/megb023/ecommerce-react-app/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/megb023/ecommerce-react-app/actions)
+
 
