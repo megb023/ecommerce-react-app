@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const BASE_URL = 'https://fakestoreapi.com';
-const BACKEND_URL = 'http://127.0.0.1:5000'; // Replace with your Flask backend URL
+const BACKEND_URL = 'http://127.0.0.1:5001'; // Replace with your Flask backend URL
 
 // Fetch all products
 export const fetchProducts = async () => {
@@ -49,7 +49,7 @@ export const fetchCart = async () => {
 export const updateCartItem = async (itemId, newQuantity) => {
     console.log(`Sending request to update item ${itemId} to quantity ${newQuantity}`);
     try {
-      const response = await fetch(`http://127.0.0.1:5000/cart/${itemId}`, {
+      const response = await fetch(`${BACKEND_URL}/cart/${itemId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

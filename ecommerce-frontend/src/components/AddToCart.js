@@ -11,7 +11,7 @@ const AddToCartButton = ({ product, quantity }) => {
 
     try {
       console.log('Attempting to add to cart:', product, 'Quantity:', quantity);
-      const response = await fetch('http://127.0.0.1:5000/cart', {
+      const response = await fetch('http://127.0.0.1:5001/cart', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
