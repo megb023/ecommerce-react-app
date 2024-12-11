@@ -5,6 +5,10 @@ from sqlalchemy.sql import func
 
 app = Flask(__name__)
 
+@app.route('/health')
+def health_check():
+    return jsonify({"status": "healthy"}), 200
+
 # Configure CORS
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
