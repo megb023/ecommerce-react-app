@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  frontend:
+    build:
+      context: ./ecommerce-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./ecommerce-frontend:/app
+      - /app/node_modules
+    stdin_open: true
+    tty: true
+
+  backend:
+    build:
+      context: ./ecommerce-backend
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5000"
+    volumes:
+      - ./ecommerce-backend:/app
+      - ./ecommerce-backend/instance:/app/instance
+    environment:
+      - FLASK_ENV=development
+    stdin_open: true
+    tty: true
+
+  cypress:
+    image: cypress/included:latest
+    depends_on:
+      - frontend
+      - backend
+    environment:
+      - CYPRESS_baseUrl=http://localhost:3000
+      - CYPRESS_API_URL=http://localhost:5001
+    volumes:
+      - ./cypress:/cypress
+      - ./cypress.config.js:/cypress.config.js
+      - ./cypress/videos:/cypress/videos
+      - ./cypress/screenshots:/cypress/screenshots
+    network_mode: "host"
