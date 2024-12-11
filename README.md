@@ -42,7 +42,6 @@ cd ecommerce-backend
 python -m venv venv
 source venv/bin/activate # On Windows use `venv\Scripts\activate`
 pip install -r requirements.txt
-flask db upgrade
 flask run
 ```
 3. Set up the frontend:
@@ -53,7 +52,7 @@ npm install
 npm start
 ```
 
-## Running Tests
+## Running Tests (From Root Directory)
 ### API Tests (Postman)
 1. Import the Postman collection from api-tests/StoreCartTest.json
 2. Run the collection in Postman
@@ -69,8 +68,8 @@ newman run api-tests/StoreCartTest.json
 1. Ensure the application is running locally
 2. Run Cypress tests:
 ```
-cd ecommerce-frontend
-npm run cypress:open
+npm install cypress --save-dev
+npm run cypress:run
 ```
 ## CI/CD Workflow
 This project uses GiHub Actions for CI/CD, automatically trigger on:
@@ -118,5 +117,10 @@ The full workflow config can be found int .github/workflows/ci-cd.yml
 - Status code validation
 
 ### Test Demonstrations
-#### E2E Tests (Cypress)
+#### Product Detail Test Example - Cypress
+<img src="demos/product_detail_tests.gif" width="800" alt="Product Detail tests">
+
+#### CI/CD Workflow (Click badge to see all runs)
+[![CI/CD](https://github.com/megb023/ecommerce-react-app/actions/workflows/ci-cd.yml/badge.svg?branch=main)](https://github.com/megb023/ecommerce-react-app/actions)
+
 
