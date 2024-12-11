@@ -25,9 +25,35 @@ By building both the frontend and backend myself, this project illustrates not o
 - Database: SQLAlchemy
 - API Testing: Postman
 - E2E Testing: Cypress
-- CI/CD: GitHub Actions
+- DevOps: CI/CD (GitHub Actions), Docker
 
 ## Installation and Setup
+
+### Option 1: Using Docker (Recommended)
+
+1. Clone the repository
+   
+```
+git clone https://github.com/megb023/ecommerce-react-app.git
+cd ecommerce-react-app
+```
+2. Build and run with Docker Compose
+
+```
+docker-compose up --build
+```
+
+The application will be available at
+
+- Frontend: http://localhost:3000
+- Backend: http://localhost:5001
+
+To stop the containers:
+
+```
+docker-compose down
+```
+### Option 2: Local Development Setup
 
 1. Clone the repository
 
@@ -70,6 +96,12 @@ newman run api-tests/StoreCartTest.json
 ```
 npm install cypress --save-dev
 npm run cypress:run
+```
+
+or if using Docker
+
+```
+docker-compose -f docker-compose.test.yml up cypress
 ```
 ## CI/CD Workflow
 This project uses GiHub Actions for CI/CD, automatically trigger on:
