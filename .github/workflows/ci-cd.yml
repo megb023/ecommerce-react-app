@@ -12,69 +12,29 @@ jobs:
     
     steps:
     - uses: actions/checkout@v3
-    
-    - name: Use Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18.x'
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11' 
-    
-    - name: Install Dependencies
-      run: |
-        cd ecommerce-frontend
-        npm ci
-    - name: Build Frontend
-      run: |
-        cd ecommerce-frontend
-        npm run build
-    - name: Start Frontend Server
-      run: |
-        cd ecommerce-frontend
-        npm start &
-        sleep 60
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
 
-    - name: Install backend dependencies
+    - name: Build and start services
       run: |
-        cd ecommerce-backend
-        pip install -r requirements.txt  # Assuming you have a requirements.txt file
-    
+        docker-compose -f docker-compose.test.yml build
+        docker-compose -f docker-compose.test.yml up -d backend frontend
+
+    - name: Wait for services to be ready
+      run: |
+        # Wait for frontend
+        timeout 60 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:3000)" != "200" ]]; do sleep 5; done' || false
+        # Wait for backend
+        timeout 60 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:5001/health)" != "200" ]]; do sleep 5; done' || false
+
     - name: Run React tests
       run: |
-        cd ecommerce-frontend  # Adjust this path to match your project structure
-        npm test -- --watchAll=false
+        docker-compose -f docker-compose.test.yml exec -T frontend npm test -- --watchAll=false
 
-    - name: Start backend server
+    - name: Run Cypress tests
       run: |
-        cd ecommerce-backend
-        python app.py &  # Adjust this to your Python script that starts the server
-      env:
-        CI: true
-
-    - name: List directory contents
-      run: |
-        pwd
-        ls -R
-
-    - name: Clear npm cache
-      run: npm cache clean --force
-    - name: Clear Cypress cache
-      run: npx cypress cache clear
-    
-    - name: Cypress run
-      uses: cypress-io/github-action@v6
-      with:
-        working-directory: .
-        build: npm run build
-        start: npm start
-        wait-on: 'http://localhost:3000'
-        command: npx cypress run
-      env:
-        CYPRESS_BASE_URL: http://localhost:3000
-        CI: true
+        docker-compose -f docker-compose.test.yml up --exit-code-from cypress cypress
 
     - name: Upload Cypress screenshots
       uses: actions/upload-artifact@v3
@@ -90,11 +50,9 @@ jobs:
         name: cypress-videos
         path: cypress/videos
 
-    - name: Install Newman
-      run: npm install -g newman
-    
-    - name: Run API tests
-      run: npx newman run api-tests/StoreCartTest.json
+    - name: Cleanup
+      if: always()
+      run: docker-compose -f docker-compose.test.yml down
 
   deploy:
     needs: test
@@ -104,6 +62,20 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Login to Docker Hub 
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+    - name: Build and push Docker images
+      run: |
+        docker-compose build
+        docker-compose push
+
     - name: Deploy to production
       run: |
         # Add your deployment commands here
