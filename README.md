@@ -1,12 +1,12 @@
 # E-commerce Store Project Showcase
 
-This project demonstrates a comprehensive set of QA engineering skills as well as full-stack development capabilities. It features a complete e-commerce application that I designed and implemented from the ground up, showcasing proficiency in:
+This project serves as a practical demonstration of QA engineering practices using a basic e-commerce application structure. The simplified store implementation includes a basic database and API endpoints, providing a foundation for showcasing:
 
 1. Full-stack Development:
 
 - Backend development using Python and Flask
 - Frontend development using JavaScript and React
-- Database design and management with SQLAlchemy
+- Database using SQLite
 
 
 2. Quality Assurance:
@@ -14,6 +14,7 @@ This project demonstrates a comprehensive set of QA engineering skills as well a
 - API design and testing
 - End-to-end (E2E) testing
 - Implementation of CI/CD practices
+- Containerized with Docker
 
 By building both the frontend and backend myself, this project illustrates not only my QA expertise but also a deep understanding of software development principles and practices. This combination of skills allows for more effective testing strategies and bug prevention, as I understand the entire application stack.
 
